@@ -46,6 +46,12 @@ public class NetGameBehaviour : MonoBehaviour
         updateTilemap();
     }
 
+    public void ResetPuzzle()
+    {
+        netGame.RandomizeRotations();
+        updateTilemap();
+    }
+
     private void updateTilemap()
     {
         netGameCamera.orthographicSize = Mathf.Max(width, height) * serverSprite.bounds.size.x / 2.0f;

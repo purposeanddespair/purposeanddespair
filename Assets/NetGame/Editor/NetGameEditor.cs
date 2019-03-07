@@ -12,7 +12,9 @@ public class ObjectBuilderEditor : Editor
             return;
 
         NetGameBehaviour myScript = (NetGameBehaviour)target;
-        if(GUILayout.Button("Generate new puzzle"))
+        if (GUILayout.Button("Generate new puzzle"))
             myScript.GenerateNewPuzzle();
+        if (GUILayout.Button("Reset puzzle"))
+            myScript.ResetPuzzle();
     }
 }

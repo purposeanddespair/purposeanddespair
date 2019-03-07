@@ -24,6 +24,8 @@ namespace NetGame
                 throw new ArgumentException("Invalid tiles array", "tiles");
             Tiles = tiles.ToArray();
             Width = width;
+
+            updatePower();
         }
 
         public Tile GetTileAt(TilePos tilePos)
@@ -58,28 +60,44 @@ namespace NetGame
         {
             Tiles = Tiles.Select(tile => tile.WithStatus(TileStatus.Unpowered)).ToArray();
 
-            var queue = new Queue<TilePos>(Tiles
+            var queue = new Queue<(TilePos pos, Directions from)>(Tiles
                 .Select((tile, index) => (tile, index))
                 .Where(t => t.tile.Type == TileType.Server)
                 .Select(t => TilePos.FromIndex(t.index, Width))
+                .Select(t => (t, Directions.None))
             );
             while(queue.Any())
             {
-                var currentPos = queue.Dequeue();
-                var currentTile = GetTileAt(currentPos);
-                var neighbors = currentTile.ConnectedTiles(currentPos);
+                var (currentPos, steppedFrom) = queue.Dequeue();
+                var neighbors = GetTileAt(currentPos).Connections
+                    .Remove(steppedFrom)
+                    .Components()
+                    .Select(dir => (dir, pos: currentPos + dir))
+                    .Where(n => n.pos.IsValid(Width, Height))
+                    .Where(n => GetTileAt(n.pos).PointsTo(n.pos).Contains(currentPos))
+                    .Select(n => n.dir)
+                    .ToArray();
 
-                var cyclicNeighbors = neighbors.Where(
-                    neighborPos => GetTileAt(neighborPos).Status == TileStatus.Powered
-                );
-                foreach (TilePos cyclicNeighborPos in cyclicNeighbors)
-                    markCyclic(currentPos, cyclicNeighborPos);
+                var cyclicNeighbors = neighbors
+                    .Where(neighborDir => GetTileAt(currentPos + neighborDir).Type != TileType.Server)
+                    .Where(neighborDir => GetTileAt(currentPos + neighborDir).Status == TileStatus.Powered);
+                foreach (Direction cyclicNeighborDir in cyclicNeighbors)
+                    markCyclic(currentPos, currentPos + cyclicNeighborDir);
 
-                foreach (TilePos neighborPos in neighbors.Except(cyclicNeighbors))
-                    queue.Append(neighborPos);
+                foreach (Direction neighborDir in neighbors.Except(cyclicNeighbors))
+                    queue.Enqueue((currentPos + neighborDir, neighborDir.Mirror().Expand()));
 
-                setTileAt(currentPos, currentTile.WithStatus(TileStatus.Powered));
+                if (GetTileAt(currentPos).Status == TileStatus.Unpowered)
+                    setTileAt(currentPos, GetTileAt(currentPos).WithStatus(TileStatus.Powered));
             }
+        }
+
+        private IEnumerable<TilePos> connectedTiles(TilePos from)
+        {
+            return GetTileAt(from)
+                .PointsTo(from)
+                .Where(to => to.IsValid(Width, Height))
+                .Where(to => GetTileAt(to).PointsTo(to).Contains(from));
         }
 
         private void markCyclic(TilePos currentPos, TilePos cyclicNeighborPos)

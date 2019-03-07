@@ -51,22 +51,10 @@ namespace NetGame
             return new Tile(Type, Connections.Add(direction), Status);
         }
 
-        public bool ConnectsTo(Direction direction)
-        {
-            return Connections.HasDirection(direction);
-        }
-
-        public IEnumerable<TilePos> ConnectedTiles(TilePos myPos)
+        public IEnumerable<TilePos> PointsTo(TilePos myPos)
         {
             return Connections
                 .Components()
-                .Select(dir => myPos.Move(dir));
-        }
-
-        public IEnumerable<TilePos> ConnectedTilesFrom(TilePos myPos, Direction from)
-        {
-            return Connections
-                .Components().Except(from)
                 .Select(dir => myPos.Move(dir));
         }
     }

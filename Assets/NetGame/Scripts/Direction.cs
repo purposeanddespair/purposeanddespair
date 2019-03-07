@@ -79,6 +79,11 @@ namespace NetGame
             return directions & (Directions)~(1 << (int)direction);
         }
 
+        public static Directions Remove(this Directions directions, Directions toBeRemoved)
+        {
+            return directions & (Directions)~(int)toBeRemoved;
+        }
+
         public static bool HasDirection(this Directions directions, Direction direction)
         {
             return directions.HasFlag((Directions)(1 << (int)direction));
