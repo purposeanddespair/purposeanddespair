@@ -166,7 +166,7 @@ public class PlayerController : MonoBehaviour
 
         Vector3 origin = body.position;
         Vector3 direction = gameObject.transform.forward;
-        float maxDistance = 100;
+        float maxDistance = 6.5f;
         LayerMask layerMask = LayerMask.GetMask("Pickupable");
 
         RaycastHit hit;
