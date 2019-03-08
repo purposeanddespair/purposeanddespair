@@ -18,6 +18,8 @@ public class NetGameBehaviour : MonoBehaviour
 
     public SpriteAtlas spriteAtlas;
     public int width = 5, height = 5;
+    public int serverCount = 1;
+    public Generator.ServerPosition serverPosition = Generator.ServerPosition.Centered;
 
     private Sprite terminalSprite, serverSprite;
     private IReadOnlyDictionary<Directions, Sprite> wireSprites;
@@ -42,6 +44,8 @@ public class NetGameBehaviour : MonoBehaviour
         var generator = new Generator();
         generator.Width = width;
         generator.Height = height;
+        generator.ServerCount = serverCount;
+        generator.ServerPos = serverPosition;
         netGame = generator.Generate();
         updateTilemap();
     }

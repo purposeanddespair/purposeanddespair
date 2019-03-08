@@ -79,7 +79,6 @@ namespace NetGame
                     .ToArray();
 
                 var cyclicNeighbors = neighbors
-                    .Where(neighborDir => GetTileAt(currentPos + neighborDir).Type != TileType.Server)
                     .Where(neighborDir => GetTileAt(currentPos + neighborDir).Status == TileStatus.Powered);
                 foreach (Direction cyclicNeighborDir in cyclicNeighbors)
                     markCyclic(currentPos, currentPos + cyclicNeighborDir);
