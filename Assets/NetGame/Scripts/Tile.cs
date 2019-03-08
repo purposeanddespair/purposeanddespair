@@ -20,35 +20,42 @@ namespace NetGame
 
     public struct Tile
     {
-        public Tile(TileType type, Directions connections = Directions.None, TileStatus status = TileStatus.Unpowered)
+        public Tile(TileType type, int powerId, Directions connections = Directions.None, TileStatus status = TileStatus.Unpowered)
         {
             Type = type;
             Connections = connections;
             Status = type == TileType.Server ? TileStatus.Powered : status;
+            PowerId = powerId;
         }
 
         public TileType Type { get; }
         public Directions Connections { get; }
         public TileStatus Status { get; }
+        public int PowerId { get; }
 
         public Tile Rotate()
         {
-            return new Tile(Type, Connections.Rotate(), Status);
+            return new Tile(Type, PowerId, Connections.Rotate(), Status);
         }
 
         public Tile WithType(TileType type)
         {
-            return new Tile(type, Connections, Status);
+            return new Tile(type, PowerId, Connections, Status);
         }
 
         public Tile WithStatus(TileStatus status)
         {
-            return new Tile(Type, Connections, status);
+            return new Tile(Type, PowerId, Connections, status);
+        }
+
+        public Tile WithStatusAndPowerId(TileStatus status, int powerId)
+        {
+            return new Tile(Type, powerId, Connections, status);
         }
 
         public Tile WithNewConnection(Direction direction)
         {
-            return new Tile(Type, Connections.Add(direction), Status);
+            return new Tile(Type, PowerId, Connections.Add(direction), Status);
         }
 
         public IEnumerable<TilePos> PointsTo(TilePos myPos)

@@ -87,7 +87,7 @@ namespace NetGame
                     queue.Enqueue((currentPos + neighborDir, neighborDir.Mirror().Expand()));
 
                 if (GetTileAt(currentPos).Status == TileStatus.Unpowered)
-                    setTileAt(currentPos, GetTileAt(currentPos).WithStatus(TileStatus.Powered));
+                    setTileAt(currentPos, GetTileAt(currentPos).WithStatusAndPowerId(TileStatus.Powered, GetTileAt(currentPos + steppedFrom.Single()).PowerId));
             }
         }
 

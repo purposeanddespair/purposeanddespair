@@ -12,14 +12,18 @@ public class NetGameBehaviour : MonoBehaviour
     private static readonly IReadOnlyDictionary<TileStatus, Color> colorByTileStatus = new Dictionary<TileStatus, Color>()
     {
         { TileStatus.Unpowered, Color.white },
-        { TileStatus.Powered, Color.blue },
         { TileStatus.Cyclic, Color.red }
+    };
+    private static readonly Color[] colorByPowerId = new Color[]
+    {
+        Color.blue, Color.yellow, Color.green
     };
 
     public SpriteAtlas spriteAtlas;
     public int width = 5, height = 5;
-    public int serverCount = 1;
-    public Generator.ServerPosition serverPosition = Generator.ServerPosition.Centered;
+    public int serverCount = 2;
+    public Generator.ServerPosition serverPosition = Generator.ServerPosition.Random;
+    public int powerCount = 2;
 
     private Sprite terminalSprite, serverSprite;
     private IReadOnlyDictionary<Directions, Sprite> wireSprites;
@@ -46,6 +50,7 @@ public class NetGameBehaviour : MonoBehaviour
         generator.Height = height;
         generator.ServerCount = serverCount;
         generator.ServerPos = serverPosition;
+        generator.PowerCount = powerCount;
         netGame = generator.Generate();
         updateTilemap();
     }
@@ -86,7 +91,9 @@ public class NetGameBehaviour : MonoBehaviour
                 {
                     var tile = ScriptableObject.CreateInstance<UnityEngine.Tilemaps.Tile>();
                     tile.sprite = wireSprites[gameTile.Connections];
-                    tile.color = colorByTileStatus[gameTile.Status];
+                    tile.color = gameTile.Status == TileStatus.Powered
+                        ? colorByPowerId[gameTile.PowerId]
+                        : colorByTileStatus[gameTile.Status];
                     tiles.Add(tile);
                     tilePositions.Add(new Vector3Int(x, y, 0));
                 }

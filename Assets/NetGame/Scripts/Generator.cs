@@ -17,21 +17,22 @@ namespace NetGame
         public int Seed { get; set; } = new Random().Next();
         public ServerPosition ServerPos { get; set; } = ServerPosition.Centered;
         public int ServerCount { get; set; } = 1;
+        public int PowerCount { get; set; } = 1;
 
         public NetGame Generate()
         {
             validateParameters();
             Random random = new Random(Seed);
-            Tile[] tiles = Enumerable.Repeat(new Tile(TileType.Terminal), Width * Height).ToArray();
+            Tile[] tiles = Enumerable.Repeat(new Tile(TileType.Terminal, 0), Width * Height).ToArray();
 
             // Generate servers
             var servers = generateServers(random);
-            foreach (var serverPos in servers)
-                tiles[serverPos.ToIndex(Width)] = new Tile(TileType.Server);
+            foreach (var server in servers)
+                tiles[server.pos.ToIndex(Width)] = new Tile(TileType.Server, server.powerId);
 
             // Generate wires
             int remainingTiles = tiles.Length - servers.Count();
-            var branchHeads = new List<TilePos>(servers);
+            var branchHeads = new List<TilePos>(servers.Select(server => server.pos));
             while (branchHeads.Any() && remainingTiles > 0)
             {
                 // Find next step
@@ -46,8 +47,9 @@ namespace NetGame
                 // Add new step
                 var nextStep = nextSteps[random.Next(nextSteps.Length)];
                 var nextPos = curPos + nextStep;
+                int powerId = tiles[curPos.ToIndex(Width)].PowerId;
                 tiles[curPos.ToIndex(Width)] = tiles[curPos.ToIndex(Width)].WithNewConnection(nextStep);
-                tiles[nextPos.ToIndex(Width)] = new Tile(TileType.Wire, nextStep.Mirror().Expand());
+                tiles[nextPos.ToIndex(Width)] = new Tile(TileType.Wire, powerId, nextStep.Mirror().Expand());
                 remainingTiles--;
                 branchHeads.Add(nextPos);
             }
@@ -66,10 +68,10 @@ namespace NetGame
             return new NetGame(tiles, Width);
         }
 
-        private IEnumerable<TilePos> generateServers(Random random)
+        private IEnumerable<(TilePos pos, int powerId)> generateServers(Random random)
         {
             if (ServerPos == ServerPosition.Centered)
-                return new[] { new TilePos(Width / 2, Height / 2) };
+                return new[] { (new TilePos(Width / 2, Height / 2), 0) };
 
             if (ServerPos != ServerPosition.Random)
                 throw new NotImplementedException();
@@ -82,7 +84,11 @@ namespace NetGame
                     newPos = TilePos.FromIndex(random.Next(Width * Height), Width);
                 } while (!servers.Add(newPos));
             }
-            return servers;
+            return servers
+                .Select((pos, i) => (
+                    pos,
+                    i < PowerCount ? i : random.Next(PowerCount)
+                ));
         }
 
         private IEnumerable<Direction> findNextSteps(TilePos tilePos, Tile[] tiles)
@@ -106,6 +112,10 @@ namespace NetGame
                 throw new ArgumentException("There cannot be more than one centered server");
             if (ServerCount <= 0 || ServerCount > Width * Height)
                 throw new ArgumentOutOfRangeException("ServerCount");
+            if (PowerCount < 1)
+                throw new ArgumentOutOfRangeException("PowerCount");
+            if (PowerCount > ServerCount)
+                throw new ArgumentException("There needs to be at least as many servers as power types");
         }
     }
 }
