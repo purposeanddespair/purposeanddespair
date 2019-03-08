@@ -52,6 +52,16 @@ public class NetGameBehaviour : MonoBehaviour
         updateTilemap();
     }
 
+    public void OnClickAt(Vector2 normalizedPos)
+    {
+        TilePos tilePos = new TilePos(
+            (int)(normalizedPos.x * width),
+            (int)(normalizedPos.y * height)
+        );
+        netGame.RotateAt(tilePos);
+        updateTilemap();
+    }
+
     private void updateTilemap()
     {
         netGameCamera.orthographicSize = Mathf.Max(width, height) * serverSprite.bounds.size.x / 2.0f;
