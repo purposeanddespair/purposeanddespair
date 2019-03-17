@@ -36,7 +36,6 @@ public class NetGameBehaviour : MonoBehaviour
         tilemap = GetComponent<Tilemap>();
         netGameCamera = GetComponent<Camera>();
         createSpriteMap();
-        GenerateNewPuzzle();
     }
 
     void Update()

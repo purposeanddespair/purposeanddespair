@@ -6,13 +6,20 @@ public class doorController : MonoBehaviour
 {
     public buttonController input;
 
-    // Update is called once per frame
+    private Vector3 closePosition;
+    private Transform door;
+
+    public void Start()
+    {
+        door = gameObject.transform.GetChild(0);
+        closePosition = door.transform.position;
+    }
+
     void Update()
     {
-        Transform door = gameObject.transform.GetChild(0);
-        Vector3 closePosition = door.transform.position;
         Vector3 openPosition = closePosition;
-        openPosition.x += 20;
+        Vector3 doorMovement = new Vector3(9, 0, 0);
+        openPosition += door.rotation * doorMovement;
         if (input.isActive)
             door.transform.position = openPosition;
         else
