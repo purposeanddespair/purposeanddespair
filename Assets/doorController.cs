@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class doorController : MonoBehaviour
+public class DoorController : MonoBehaviour
 {
-    public buttonController input;
+    public ButtonController input;
 
     private Vector3 closePosition;
     private Transform door;

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class upgradeRotator : MonoBehaviour
+public class UpgradeController : MonoBehaviour
 {
+    public bool isPickedUp = false;
+
     private int sign = 1;
     private int signCount = 0;
     void Update()
@@ -27,6 +29,7 @@ public class upgradeRotator : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             gameObject.SetActive(false);
+            isPickedUp = true;
         }
     }
 }

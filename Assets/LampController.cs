@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LampController : MonoBehaviour
 {
-    public buttonController input;
+    public ButtonController input;
     
     void Update()
     {

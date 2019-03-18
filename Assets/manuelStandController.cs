@@ -2,15 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class manuelStandController : MonoBehaviour
+public class ManuelStandController : MonoBehaviour
 {
-    public buttonController button;
+    public ButtonController button;
     public NetGameBehaviour netGame;
+    public UpgradeController upgrade;
 
     private bool createNewGame = true;
 
+    private void Start()
+    {
+        button.isEnabled = false;
+        button.GetComponent<Renderer>().material.color = Color.red;
+
+        if (upgrade == null)
+        {
+            button.isEnabled = true;
+            button.GetComponent<Renderer>().material.color = Color.green;
+        }
+    }
+
     void Update()
     {
+        if (upgrade != null && upgrade.isPickedUp)
+        {
+            button.isEnabled = true;
+            button.GetComponent<Renderer>().material.color = Color.green;
+        }
         if (createNewGame && button.isActive)
         {
             netGame.GenerateNewPuzzle();

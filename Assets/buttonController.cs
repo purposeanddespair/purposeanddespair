@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 
-public class buttonController : MonoBehaviour
+public class ButtonController : MonoBehaviour
 {
     public bool isActive = false;
+    public bool isEnabled = true;
 
     private void OnCollisionEnter(Collision collision)
     {
-        isActive = true;
+        if(isEnabled)
+            isActive = true;
     }
 
     private void OnCollisionExit(Collision collision)
@@ -16,6 +18,7 @@ public class buttonController : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        isActive = true;
+        if (isEnabled)
+            isActive = true;
     }
 }
