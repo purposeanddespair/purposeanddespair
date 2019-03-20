@@ -32,15 +32,19 @@ public class NetGameBehaviour : MonoBehaviour
     private Camera netGameCamera;
     private NetGame.NetGame netGame;
 
-    private UnityEngine.Tilemaps.Tile currentRotatingTile = null;
-    private float currentRotatingTileValue;
-    private float currentRotatingTileTarget;
-    private TilePos currentRotatingTilePos;
-    private int currentRotateCount;
-    private Vector3Int currentRotatingTileMapPos => new Vector3Int(
-        currentRotatingTilePos.X,
-        currentRotatingTilePos.Y,
-        0) + centeringOffset;
+    private class RotatingTile
+    {
+        public TilePos pos;
+        public float value = 0.0f; // current rotation value
+        public float target = 0.0f; // target rotation value
+        public int count = 0; // count of rotations to be applied
+
+        public RotatingTile(TilePos rotateTilePos)
+        {
+            pos = rotateTilePos;
+        }
+    }
+    private List<RotatingTile> rotatingTiles = new List<RotatingTile>();
 
     void Start()
     {
@@ -63,21 +67,29 @@ public class NetGameBehaviour : MonoBehaviour
 
     void Update()
     {
-        if (currentRotatingTile != null)
-        {
-            currentRotatingTileValue = iTween.FloatUpdate(currentRotatingTileValue, currentRotatingTileTarget, 10.0f);
-            Vector3 euler = currentRotatingTileValue * Vector3.forward;
-            setTileZRotation(currentRotatingTileMapPos, euler);
-            //setTileZRotation(currentRotatingTileMapPos + new Vector3Int(0, 0, 1), euler);
+        var shouldUpdate = false;
 
-            if (Mathf.Abs(currentRotatingTileValue - (currentRotatingTileTarget)) < 5.0f)
+        var finishedTiles = new List<RotatingTile>();
+        foreach (var rt in rotatingTiles)
+        {
+            rt.value = iTween.FloatUpdate(rt.value, rt.target, 15.0f);
+            setTileZRotation(
+                centeringOffset + new Vector3Int(rt.pos.X, rt.pos.Y, 0),
+                Vector3.forward * rt.value
+            );
+
+            if (Mathf.Abs(rt.value - rt.target) < 5.0f)
             {
-                currentRotatingTile = null;
-                for (int i = 0; i < currentRotateCount; i++)
-                    netGame.RotateAt(currentRotatingTilePos);
-                updateTilemap();
+                finishedTiles.Add(rt);
+                for (int i = 0; i < rt.count; i++)
+                    netGame.RotateAt(rt.pos);
+                shouldUpdate = true;
             }
         }
+        rotatingTiles = rotatingTiles.Except(finishedTiles).ToList();
+
+        if (shouldUpdate)
+            updateTilemap();
     }
 
     public void GenerateNewPuzzle()
@@ -104,23 +116,18 @@ public class NetGameBehaviour : MonoBehaviour
             (int)(normalizedPos.x * width),
             (int)(normalizedPos.y * height)
         );
-        if (currentRotatingTile == null)
-        {
-            currentRotatingTileValue = currentRotatingTileTarget = 0.0f;
-            currentRotateCount = 0;
-        }
-        else if (currentRotatingTilePos != rotateTilePos)
-            return;
+        var previousTileSet = rotatingTiles.Where(rt => rt.pos == rotateTilePos);
 
-        currentRotatingTilePos = new TilePos(
-            (int)(normalizedPos.x * width),
-            (int)(normalizedPos.y * height)
-        );
-        currentRotatingTile = tilemap.GetTile<UnityEngine.Tilemaps.Tile>(currentRotatingTileMapPos);
-        currentRotatingTileTarget -= 90.0f;
-        if (currentRotatingTileTarget <= -360.0f)
-            currentRotatingTileTarget += 360.0f;
-        currentRotateCount++;
+        RotatingTile rotateTile;
+        if (previousTileSet.Any())
+            rotateTile = previousTileSet.Single();
+        else
+            rotatingTiles.Add(rotateTile = new RotatingTile(rotateTilePos));
+
+        rotateTile.count++;
+        rotateTile.target -= 90.0f;
+        if (rotateTile.target <= -360.0f)
+            rotateTile.target += 360.0f;
     }
 
     private void updateTilemap()
