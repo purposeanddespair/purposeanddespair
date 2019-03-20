@@ -25,21 +25,56 @@ public class NetGameBehaviour : MonoBehaviour
     public Generator.ServerPosition serverPosition = Generator.ServerPosition.Random;
     public int powerCount = 2;
 
+    private Vector3Int centeringOffset => new Vector3Int(-width / 2, -height / 2, 0);
     private Sprite terminalSprite, serverSprite;
     private IReadOnlyDictionary<Directions, Sprite> wireSprites;
     private Tilemap tilemap;
     private Camera netGameCamera;
     private NetGame.NetGame netGame;
 
+    private UnityEngine.Tilemaps.Tile currentRotatingTile = null;
+    private float currentRotatingTileValue;
+    private TilePos currentRotatingTilePos;
+    private Vector3Int currentRotatingTileMapPos => new Vector3Int(
+        currentRotatingTilePos.X,
+        currentRotatingTilePos.Y,
+        0) + centeringOffset;
+
     void Start()
     {
         tilemap = GetComponent<Tilemap>();
         netGameCamera = GetComponent<Camera>();
         createSpriteMap();
+
+        GenerateNewPuzzle();
+    }
+
+    private void setTileZRotation(Vector3Int tilePos, Vector3 euler)
+    {
+        var tile = tilemap.GetTile<UnityEngine.Tilemaps.Tile>(tilePos);
+        if (tile == null)
+            return;
+        tile.flags = TileFlags.LockTransform;
+        tile.transform = Matrix4x4.Rotate(Quaternion.Euler(euler));
+        tilemap.RefreshTile(tilePos);
     }
 
     void Update()
     {
+        if (currentRotatingTile != null)
+        {
+            currentRotatingTileValue = iTween.FloatUpdate(currentRotatingTileValue, -90.0f, 10.0f);
+            Vector3 euler = currentRotatingTileValue * Vector3.forward;
+            setTileZRotation(currentRotatingTileMapPos, euler);
+            //setTileZRotation(currentRotatingTileMapPos + new Vector3Int(0, 0, 1), euler);
+
+            if (Mathf.Abs(currentRotatingTileValue - (-90.0f)) < 5.0f)
+            {
+                currentRotatingTile = null;
+                netGame.RotateAt(currentRotatingTilePos);
+                updateTilemap();
+            }
+        }
     }
 
     public void GenerateNewPuzzle()
@@ -62,12 +97,15 @@ public class NetGameBehaviour : MonoBehaviour
 
     public void OnClickAt(Vector2 normalizedPos)
     {
-        TilePos tilePos = new TilePos(
+        if (currentRotatingTile != null)
+            return;
+
+        currentRotatingTilePos = new TilePos(
             (int)(normalizedPos.x * width),
             (int)(normalizedPos.y * height)
         );
-        netGame.RotateAt(tilePos);
-        updateTilemap();
+        currentRotatingTile = tilemap.GetTile<UnityEngine.Tilemaps.Tile>(currentRotatingTileMapPos);
+        currentRotatingTileValue = 0.0f;
     }
 
     private void updateTilemap()
@@ -108,7 +146,6 @@ public class NetGameBehaviour : MonoBehaviour
             }
         }
 
-        Vector3Int centeringOffset = new Vector3Int(-width / 2, -height / 2, 0);
         tilemap.SetTiles(
             tilePositions.Select(pos => pos + centeringOffset).ToArray(),
             tiles.ToArray()
