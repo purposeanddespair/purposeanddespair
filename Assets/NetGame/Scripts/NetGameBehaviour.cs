@@ -19,6 +19,8 @@ public class NetGameBehaviour : MonoBehaviour
         Color.blue, Color.yellow, Color.green
     };
 
+    public event Action GameWasCompleted = ()=>{ Debug.Log("Game was completed"); };
+
     public SpriteAtlas spriteAtlas;
     public int width = 5, height = 5;
     public int serverCount = 2;
@@ -89,7 +91,11 @@ public class NetGameBehaviour : MonoBehaviour
         rotatingTiles = rotatingTiles.Except(finishedTiles).ToList();
 
         if (shouldUpdate)
+        {
             updateTilemap();
+            if (netGame.Completed)
+                GameWasCompleted();
+        }
     }
 
     public void GenerateNewPuzzle()
@@ -112,6 +118,9 @@ public class NetGameBehaviour : MonoBehaviour
 
     public void OnClickAt(Vector2 normalizedPos)
     {
+        if (netGame.Completed)
+            return;
+
         TilePos rotateTilePos = new TilePos(
             (int)(normalizedPos.x * width),
             (int)(normalizedPos.y * height)
