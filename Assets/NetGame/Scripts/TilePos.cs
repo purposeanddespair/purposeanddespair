@@ -48,6 +48,16 @@ namespace NetGame
             return pos.Move(dir, -1);
         }
 
+        public static bool operator == (TilePos a, TilePos b)
+        {
+            return a.X == b.X && a.Y == b.Y;
+        }
+
+        public static bool operator != (TilePos a, TilePos b)
+        {
+            return a.X != b.X || a.Y != b.Y;
+        }
+
         /// <summary>
         /// Finds the von-Neumann-Neighborhood
         /// </summary>

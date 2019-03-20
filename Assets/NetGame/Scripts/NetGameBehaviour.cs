@@ -34,7 +34,9 @@ public class NetGameBehaviour : MonoBehaviour
 
     private UnityEngine.Tilemaps.Tile currentRotatingTile = null;
     private float currentRotatingTileValue;
+    private float currentRotatingTileTarget;
     private TilePos currentRotatingTilePos;
+    private int currentRotateCount;
     private Vector3Int currentRotatingTileMapPos => new Vector3Int(
         currentRotatingTilePos.X,
         currentRotatingTilePos.Y,
@@ -63,15 +65,16 @@ public class NetGameBehaviour : MonoBehaviour
     {
         if (currentRotatingTile != null)
         {
-            currentRotatingTileValue = iTween.FloatUpdate(currentRotatingTileValue, -90.0f, 10.0f);
+            currentRotatingTileValue = iTween.FloatUpdate(currentRotatingTileValue, currentRotatingTileTarget, 10.0f);
             Vector3 euler = currentRotatingTileValue * Vector3.forward;
             setTileZRotation(currentRotatingTileMapPos, euler);
             //setTileZRotation(currentRotatingTileMapPos + new Vector3Int(0, 0, 1), euler);
 
-            if (Mathf.Abs(currentRotatingTileValue - (-90.0f)) < 5.0f)
+            if (Mathf.Abs(currentRotatingTileValue - (currentRotatingTileTarget)) < 5.0f)
             {
                 currentRotatingTile = null;
-                netGame.RotateAt(currentRotatingTilePos);
+                for (int i = 0; i < currentRotateCount; i++)
+                    netGame.RotateAt(currentRotatingTilePos);
                 updateTilemap();
             }
         }
@@ -97,7 +100,16 @@ public class NetGameBehaviour : MonoBehaviour
 
     public void OnClickAt(Vector2 normalizedPos)
     {
-        if (currentRotatingTile != null)
+        TilePos rotateTilePos = new TilePos(
+            (int)(normalizedPos.x * width),
+            (int)(normalizedPos.y * height)
+        );
+        if (currentRotatingTile == null)
+        {
+            currentRotatingTileValue = currentRotatingTileTarget = 0.0f;
+            currentRotateCount = 0;
+        }
+        else if (currentRotatingTilePos != rotateTilePos)
             return;
 
         currentRotatingTilePos = new TilePos(
@@ -105,7 +117,10 @@ public class NetGameBehaviour : MonoBehaviour
             (int)(normalizedPos.y * height)
         );
         currentRotatingTile = tilemap.GetTile<UnityEngine.Tilemaps.Tile>(currentRotatingTileMapPos);
-        currentRotatingTileValue = 0.0f;
+        currentRotatingTileTarget -= 90.0f;
+        if (currentRotatingTileTarget <= -360.0f)
+            currentRotatingTileTarget += 360.0f;
+        currentRotateCount++;
     }
 
     private void updateTilemap()
