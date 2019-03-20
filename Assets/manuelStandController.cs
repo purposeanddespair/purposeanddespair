@@ -7,6 +7,7 @@ public class ManuelStandController : MonoBehaviour
     public ButtonController button;
     public NetGameBehaviour netGame;
     public UpgradeController upgrade;
+    public PlayerAbilities abilities;
 
     private bool createNewGame = true;
 
@@ -40,5 +41,10 @@ public class ManuelStandController : MonoBehaviour
         {
             createNewGame = true;
         }
+    }
+
+    private void success()
+    {
+        abilities.canPickup = true;
     }
 }

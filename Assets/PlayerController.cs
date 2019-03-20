@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     public float speed = 0.1f;
     public float rotationSpeed = 1f;
     public float maxStepHeight = 1.2f;
+    public PlayerAbilities abilities;
 
     private List<ContactPoint> allContactPoints = new List<ContactPoint>();
     private GameObject holdingObject = null;
@@ -14,12 +15,12 @@ public class PlayerController : MonoBehaviour
 
     private List<Vector3> drawPoint = new List<Vector3>();
     private Vector3 drawDirection;
-
+    
     private void Update()
     {
         Move();
 
-        RotateAdjustingToGround();
+        //RotateAdjustingToGround();
 
         ContactPoint groundContactPoint = findGround();
 
@@ -149,7 +150,7 @@ public class PlayerController : MonoBehaviour
 
     private bool pickup()
     {
-        if (holdingObject != null)
+        if (holdingObject != null || !abilities.canPickup)
             return true;
 
         //pickup object

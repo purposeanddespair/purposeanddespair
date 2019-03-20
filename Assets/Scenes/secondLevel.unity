@@ -4538,6 +4538,7 @@ GameObject:
   - component: {fileID: 742225115}
   - component: {fileID: 742225114}
   - component: {fileID: 742225113}
+  - component: {fileID: 742225116}
   m_Layer: 2
   m_Name: player
   m_TagString: Untagged
@@ -4576,6 +4577,7 @@ MonoBehaviour:
   speed: 0.1
   rotationSpeed: 1
   maxStepHeight: 2
+  abilities: {fileID: 742225116}
 --- !u!4 &742225115
 Transform:
   m_ObjectHideFlags: 0
@@ -4591,6 +4593,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: -199.88, z: 0}
+--- !u!114 &742225116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 742225112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8f5df0d9bd15c94e9866e0fa9fc3354, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canPickup: 1
 --- !u!1 &810668104
 GameObject:
   m_ObjectHideFlags: 0
@@ -6958,6 +6973,7 @@ MonoBehaviour:
   button: {fileID: 404261829}
   netGame: {fileID: 1050718852}
   upgrade: {fileID: 0}
+  abilities: {fileID: 742225116}
 --- !u!1001 &1050718851
 PrefabInstance:
   m_ObjectHideFlags: 0
