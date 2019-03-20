@@ -52,6 +52,8 @@ namespace NetGame
 
         public void RotateAt(TilePos tilePos)
         {
+            if (Completed)
+                return;
             setTileAt(tilePos, GetTileAt(tilePos).Rotate());
             updatePower();
         }
