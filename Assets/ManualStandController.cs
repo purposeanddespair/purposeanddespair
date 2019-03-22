@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ManuelStandController : MonoBehaviour
+public class ManualStandController : MonoBehaviour
 {
     public ButtonController button;
     public NetGameBehaviour netGame;
@@ -34,6 +34,8 @@ public class ManuelStandController : MonoBehaviour
         {
             netGame.GenerateNewPuzzle();
             netGame.ResetPuzzle();
+
+            netGame.GameWasCompleted += success;
 
             createNewGame = false;
         }

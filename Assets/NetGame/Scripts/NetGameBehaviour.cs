@@ -53,8 +53,6 @@ public class NetGameBehaviour : MonoBehaviour
         tilemap = GetComponent<Tilemap>();
         netGameCamera = GetComponent<Camera>();
         createSpriteMap();
-
-        GenerateNewPuzzle();
     }
 
     private void setTileZRotation(Vector3Int tilePos, Vector3 euler)
