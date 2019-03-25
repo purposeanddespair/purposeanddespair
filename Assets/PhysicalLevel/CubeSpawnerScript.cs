@@ -16,7 +16,7 @@ public class CubeSpawnerScript : MonoBehaviour
             cube.transform.localScale = new Vector3(3, 3, 3);
             cube.layer = 12;
             cube.GetComponent<Renderer>().material.color = Color.green;
-            Vector3 cubePosition = new Vector3(gameObject.transform.position.x + 0.5f, gameObject.transform.Find("SpawnerHeadBottom").transform.position.y, gameObject.transform.Find("Pipe (3)").transform.position.z);
+            Vector3 cubePosition = new Vector3(gameObject.transform.Find("Pipe (3)").transform.position.x, gameObject.transform.Find("SpawnerHeadBottom").transform.position.y, gameObject.transform.Find("Pipe (3)").transform.position.z);
             cube.transform.position = cubePosition;
             Rigidbody rb = cube.AddComponent<Rigidbody>();
             rb.mass = 1;

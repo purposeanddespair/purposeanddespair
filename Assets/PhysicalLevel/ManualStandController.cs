@@ -7,7 +7,8 @@ public class ManualStandController : MonoBehaviour
     public ButtonController button;
     public NetGameBehaviour netGame;
     public UpgradeController upgrade;
-    public PlayerAbilities abilities;
+    public SuccessAction successaction;
+    public NetGamePanel netGamePanel;
 
     private bool createNewGame = true;
 
@@ -35,18 +36,15 @@ public class ManualStandController : MonoBehaviour
             netGame.GenerateNewPuzzle();
             netGame.ResetPuzzle();
 
-            netGame.GameWasCompleted += success;
+            netGame.GameWasCompleted += successaction.success;
 
             createNewGame = false;
+            netGamePanel.gameObject.SetActive(true);
         }
         else if(!button.isActive)
         {
             createNewGame = true;
+            netGamePanel.gameObject.SetActive(false);
         }
-    }
-
-    private void success()
-    {
-        abilities.canPickup = true;
     }
 }

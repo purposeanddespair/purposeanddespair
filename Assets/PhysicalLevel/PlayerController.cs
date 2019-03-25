@@ -147,7 +147,6 @@ public class PlayerController : MonoBehaviour
             
     }
 
-
     private bool pickup()
     {
         if (holdingObject != null || !abilities.canPickup)
