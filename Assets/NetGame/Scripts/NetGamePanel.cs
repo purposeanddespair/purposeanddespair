@@ -11,8 +11,9 @@ public class NetGamePanel : MonoBehaviour
         var camera = netGameBehaviour.GetComponent<Camera>();
         var renderer = GetComponent<Renderer>();
         var material = renderer.material;
-        var targetTexture = new RenderTexture(256, 256, 16);
-        material.mainTexture = camera.targetTexture = targetTexture;
+        if (camera.targetTexture == null)
+            camera.targetTexture = new RenderTexture(256, 256, 16);
+        material.mainTexture = camera.targetTexture;
     }
 
     void Update()
