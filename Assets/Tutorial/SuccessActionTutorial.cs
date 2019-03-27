@@ -8,5 +8,7 @@ public class SuccessActionTutorial : SuccessAction
     {
         abilities.gameObject.GetComponent<Rigidbody>().mass = 10000;
         abilities.canPush = true;
+
+        manualStandController.isSolved = true;
     }
 }

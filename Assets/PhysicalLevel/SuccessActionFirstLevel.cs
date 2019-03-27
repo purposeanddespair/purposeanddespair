@@ -7,5 +7,7 @@ public class SuccessActionFirstLevel : SuccessAction
     public override void success()
     {
         abilities.canPickup = true;
+
+        manualStandController.isSolved = true;
     }
 }

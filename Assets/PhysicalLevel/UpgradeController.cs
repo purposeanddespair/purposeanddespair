@@ -8,6 +8,7 @@ public class UpgradeController : MonoBehaviour
 
     private int sign = 1;
     private int signCount = 0;
+
     void Update()
     {
         if(signCount == 80)

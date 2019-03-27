@@ -10,31 +10,30 @@ public class ManualStandController : MonoBehaviour
     public SuccessAction successaction;
     public NetGamePanel netGamePanel;
 
-    private bool createNewGame = true;
+    public bool isSolved = false;
 
+    private bool createNewGame = true;
+    
     private void Start()
     {
         button.isEnabled = false;
         button.GetComponent<Renderer>().material.color = Color.red;
-
-        if (upgrade == null)
-        {
-            button.isEnabled = true;
-            button.GetComponent<Renderer>().material.color = Color.green;
-        }
     }
 
     void Update()
     {
-        if (upgrade != null && upgrade.isPickedUp)
+        if (upgrade == null || upgrade.isPickedUp)
         {
             button.isEnabled = true;
             button.GetComponent<Renderer>().material.color = Color.green;
         }
         if (createNewGame && button.isActive)
         {
-            netGame.GenerateNewPuzzle();
-            netGame.ResetPuzzle();
+            if (!isSolved)
+            {
+                netGame.GenerateNewPuzzle();
+                netGame.ResetPuzzle();
+            }
 
             netGame.GameWasCompleted += successaction.success;
 
