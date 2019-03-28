@@ -9,5 +9,6 @@ public class SuccessActionFirstLevel : SuccessAction
         abilities.canPickup = true;
 
         manualStandController.isSolved = true;
+        AchievementManager.Instance.GotAchievement(achievement);
     }
 }

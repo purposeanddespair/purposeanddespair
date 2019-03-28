@@ -10,5 +10,6 @@ public class SuccessActionTutorial : SuccessAction
         abilities.canPush = true;
 
         manualStandController.isSolved = true;
+        AchievementManager.Instance.GotAchievement(achievement);
     }
 }

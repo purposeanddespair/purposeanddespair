@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
 
     private List<Vector3> drawPoint = new List<Vector3>();
     private Vector3 drawDirection;
-    
+
     private void Update()
     {
         Move();
@@ -35,15 +35,15 @@ public class PlayerController : MonoBehaviour
 
         allContactPoints.Clear();
     }
-    
+
     private void Move()
     {
         Vector3 forward = gameObject.transform.TransformDirection(Vector3.forward);
         Vector3 previousPosition = gameObject.transform.position;
-        
+
         gameObject.transform.position = previousPosition + forward * speed * Input.GetAxis("Vertical");
         gameObject.transform.Rotate(new Vector3(0, rotationSpeed * Input.GetAxis("Horizontal"), 0));
-        
+
         if (holdingObject != null)
         {
             relativeCubeLocation = Quaternion.Euler(0, rotationSpeed * Input.GetAxis("Horizontal"), 0) * relativeCubeLocation;
@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour
                 Vector3 stepPoint = contactPoint.point;
                 stepPoint.y = groundContactPoint.point.y + maxStepHeight;
                 stepPoint -= direction * 0.001f;
-                
+
                 Physics.Raycast(stepPoint, direction, out stepHit, maxDistance, layerMask);
 
                 stepHeight = findStepHeight(groundContactPoint, contactPoint);
@@ -144,7 +144,7 @@ public class PlayerController : MonoBehaviour
             pickup();
         else
             drop();
-            
+
     }
 
     private bool pickup()
