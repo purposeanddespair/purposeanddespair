@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class UpgradeController : MonoBehaviour
 {
-    public bool isPickedUp = false;
+    public Sprite icon;
+    public System.Action OnPickedUp = () => { };
 
     private int sign = 1;
     private int signCount = 0;
@@ -30,7 +31,7 @@ public class UpgradeController : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             gameObject.SetActive(false);
-            isPickedUp = true;
+            OnPickedUp();
         }
     }
 }
