@@ -13,6 +13,7 @@ public class CubeSpawnerScript : MonoBehaviour
         if (createNewCube && button.isActive)
         {
             GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cube.tag = "pushable";
             cube.transform.localScale = new Vector3(3, 3, 3);
             cube.layer = 12;
             cube.GetComponent<Renderer>().material.color = Color.green;
