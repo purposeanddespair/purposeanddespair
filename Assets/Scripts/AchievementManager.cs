@@ -40,7 +40,7 @@ public class AchievementManager : Singleton<AchievementManager>
         Vector3 targetPosition = uiAchievement.transform.localPosition;
         var uiTitle = uiAchievement.transform.GetComponentInChildren<TMPro.TextMeshProUGUI>();
         uiTitle.text = uiTitle.text.Replace("$NAME", a.DisplayName);
-        var uiIcon = uiAchievement.transform.GetComponentInChildren<UnityEngine.UI.Image>();
+        var uiIcon = uiAchievement.transform.Find("Image").GetComponent<UnityEngine.UI.Image>();
         uiIcon.sprite = a.Sprite;
 
         iTween.MoveFrom(uiAchievement, new Hashtable
