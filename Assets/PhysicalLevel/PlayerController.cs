@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public MotorStallController motorStallPrefab;
+
     public float speed = 0.1f;
     public float rotationSpeed = 1f;
     public float maxStepHeight = 1.2f;
@@ -72,6 +74,15 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         allContactPoints.AddRange(collision.contacts);
+        if (collision.gameObject.CompareTag("pushable") && !abilities.canPush)
+        {
+            var motorStalling = transform.GetComponentInChildren<MotorStallController>();
+            if (motorStalling != null)
+                return;
+            motorStalling = Instantiate(motorStallPrefab.gameObject).GetComponent<MotorStallController>();
+            motorStalling.transform.SetParent(transform, false);
+            motorStalling.playerTransform = transform;
+        }
     }
 
     private void OnCollisionStay(Collision collition)

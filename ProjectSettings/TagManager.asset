@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - MainCanvas
+  - pushable
   layers:
   - Default
   - TransparentFX
