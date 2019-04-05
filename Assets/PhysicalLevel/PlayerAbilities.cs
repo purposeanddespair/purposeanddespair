@@ -6,5 +6,4 @@ public class PlayerAbilities : MonoBehaviour
 {
     public bool canPush = false;
     public bool canPickup = false;
-
 }

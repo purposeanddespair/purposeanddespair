@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 public class DoorController : MonoBehaviour
 {
@@ -21,7 +22,13 @@ public class DoorController : MonoBehaviour
         Vector3 doorMovement = new Vector3(9, 0, 0);
         openPosition += door.rotation * doorMovement;
         if (input.isActive)
+        {
             door.transform.position = openPosition;
+            AnalyticsEvent.Custom("DoorOpened", new Dictionary<string, object>
+            {
+                { "name", "Door opened"}
+            });
+        }
         else
             door.transform.position = closePosition;
     }

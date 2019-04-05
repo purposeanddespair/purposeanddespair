@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 public class CubeSpawnerScript : MonoBehaviour
 {
@@ -23,6 +24,11 @@ public class CubeSpawnerScript : MonoBehaviour
             rb.mass = 1;
 
             createNewCube = false;
+
+            AnalyticsEvent.Custom("CubeSpawned", new Dictionary<string, object>
+            {
+                { "name", "Cube spawned"}
+            });
         }
         else if (!button.isActive)
         {

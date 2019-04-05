@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Analytics;
 
 public class ButtonController : MonoBehaviour
 {
@@ -7,8 +9,14 @@ public class ButtonController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(isEnabled)
+        if (isEnabled)
+        {
             isActive = true;
+            AnalyticsEvent.Custom("ButtonsPressed", new Dictionary<string, object>
+            {
+                { "name", "Button pressed"}
+            });
+        }
     }
 
     private void OnCollisionExit(Collision collision)

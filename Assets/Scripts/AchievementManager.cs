@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 public class AchievementManager : Singleton<AchievementManager>
 {
@@ -59,6 +60,11 @@ public class AchievementManager : Singleton<AchievementManager>
             { "oncomplete", "OnUIAchievementAnimationDone" },
             { "oncompletetarget", gameObject },
             { "oncompleteparams", uiAchievement }
+        });
+
+        AnalyticsEvent.Custom("AchievementGained", new Dictionary<string, object>
+        {
+            { "name", a.name}
         });
     }
 

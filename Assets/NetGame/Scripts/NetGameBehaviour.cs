@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.Tilemaps;
 using NetGame;
+using UnityEngine.Analytics;
 
 public class NetGameBehaviour : MonoBehaviour
 {
@@ -19,7 +20,14 @@ public class NetGameBehaviour : MonoBehaviour
         Color.blue, Color.yellow, Color.green
     };
 
-    public event Action GameWasCompleted = ()=>{ Debug.Log("Game was completed"); };
+    public event Action GameWasCompleted = ()=>
+        {
+            Debug.Log("Game was completed");
+            AnalyticsEvent.Custom("NetgameCompleted", new Dictionary<string, object>
+            {
+                { "name", "Netgame completed"}
+            });
+    };
 
     public SpriteAtlas spriteAtlas;
     public int width = 5, height = 5;
@@ -98,6 +106,11 @@ public class NetGameBehaviour : MonoBehaviour
 
     public void GenerateNewPuzzle()
     {
+        Analytics.CustomEvent("NetgameCreated", new Dictionary<string, object>
+        {
+            { "name", "Netgame created"}
+        });
+
         var generator = new Generator();
         generator.Width = width;
         generator.Height = height;
