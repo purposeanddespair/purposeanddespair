@@ -23,13 +23,27 @@ public class DoorController : MonoBehaviour
         openPosition += door.rotation * doorMovement;
         if (input.isActive)
         {
-            door.transform.position = openPosition;
             AnalyticsEvent.Custom("DoorOpened", new Dictionary<string, object>
             {
                 { "name", "Door opened"}
             });
+            iTween.MoveTo(door.gameObject, new Hashtable
+            {
+                { "position", openPosition },
+                { "islocal", false },
+                { "easetype", iTween.EaseType.linear },
+                { "time", 0.4f }
+            });
         }
         else
-            door.transform.position = closePosition;
+        {
+            iTween.MoveTo(door.gameObject, new Hashtable
+            {
+                { "position", closePosition},
+                { "islocal", false },
+                { "time", 0.4f }
+            });
+        }
+
     }
 }
