@@ -55,7 +55,7 @@ public class AchievementManager : Singleton<AchievementManager>
             { "position", targetPosition - new Vector3(0, -80.0f, 0.0f) },
             { "islocal", true },
             { "time", 0.3f },
-            { "delay", 2.5f },
+            { "delay", 5.5f },
             { "oncomplete", "OnUIAchievementAnimationDone" },
             { "oncompletetarget", gameObject },
             { "oncompleteparams", uiAchievement }
