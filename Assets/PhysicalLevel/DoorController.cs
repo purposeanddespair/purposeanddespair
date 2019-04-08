@@ -41,6 +41,7 @@ public class DoorController : MonoBehaviour
             {
                 { "position", closePosition},
                 { "islocal", false },
+                { "easetype", iTween.EaseType.linear },
                 { "time", 0.4f }
             });
         }
