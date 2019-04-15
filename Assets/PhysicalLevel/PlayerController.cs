@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 public class PlayerController : MonoBehaviour
 {
@@ -60,6 +61,11 @@ public class PlayerController : MonoBehaviour
         position.y += height;
         gameObject.transform.position = position;
         gameObject.transform.Rotate(new Vector3(0, rotationSpeed * Input.GetAxis("Horizontal"), 0));
+
+        AnalyticsEvent.Custom("SteppedUp", new Dictionary<string, object>
+        {
+            { "height", height}
+        });
     }
 
     private void RotateAdjustingToGround()
@@ -190,6 +196,12 @@ public class PlayerController : MonoBehaviour
 
     private bool pickupObject(GameObject go)
     {
+
+        AnalyticsEvent.Custom("PickedUp", new Dictionary<string, object>
+        {
+            { "pickup", "cube"}
+        });
+
         go.GetComponent<Rigidbody>().useGravity = false;
         go.GetComponent<Rigidbody>().isKinematic = true;
 

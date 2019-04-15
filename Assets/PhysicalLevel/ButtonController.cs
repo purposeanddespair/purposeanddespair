@@ -9,9 +9,10 @@ public class ButtonController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (isEnabled)
+        if (isEnabled && !isActive)
         {
             isActive = true;
+            //collision.other.gameObject.mass 
             AnalyticsEvent.Custom("ButtonsPressed", new Dictionary<string, object>
             {
                 { "name", "Button pressed"}
