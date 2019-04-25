@@ -31,8 +31,12 @@ public class NetGameBehaviour : MonoBehaviour
     private Sprite terminalSprite, serverSprite;
     private IReadOnlyDictionary<Directions, Sprite> wireSprites;
     private Tilemap tilemap;
+    private TilemapRenderer tilemapRenderer;
     private Camera netGameCamera;
     private NetGame.NetGame netGame;
+    private TMPro.TextMeshProUGUI uiText;
+
+    private string textTemplate;
 
     private class RotatingTile
     {
@@ -51,8 +55,26 @@ public class NetGameBehaviour : MonoBehaviour
     void Start()
     {
         tilemap = GetComponent<Tilemap>();
+        tilemapRenderer = GetComponent<TilemapRenderer>();
         netGameCamera = GetComponent<Camera>();
+        uiText = transform.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+        textTemplate = uiText.text;
+        setText("Needs part", "", -1);
+        tilemapRenderer.enabled = false;
         createSpriteMap();
+        GenerateNewPuzzle();
+        ResetPuzzle();
+    }
+
+    private void setText(string errorMessage, string successMessage, int progressBar)
+    {
+        string progressBarString = "";
+        if (progressBar >= 0)
+            progressBarString = "[" + new string('x', progressBar) + new string(' ', 10 - progressBar) + "]";
+        uiText.text = textTemplate
+            .Replace("$ERROR_MSG", errorMessage)
+            .Replace("$SUCCESS_MSG", successMessage)
+            .Replace("$PROGRESS_BAR", progressBarString);
     }
 
     private void setTileZRotation(Vector3Int tilePos, Vector3 euler)
@@ -92,8 +114,35 @@ public class NetGameBehaviour : MonoBehaviour
         {
             updateTilemap();
             if (netGame.Completed)
-                GameWasCompleted();
+                StartCoroutine(finishingAnimation());
         }
+    }
+
+    private IEnumerator finishingAnimation()
+    {
+        tilemapRenderer.enabled = false;
+        uiText.enabled = true;
+        setText("Compiling...", "", 0);
+        yield return new WaitForSeconds(0.1f);
+        for (int i = 1; i <= 10; i++)
+        {
+            setText("Compiling...", "", i);
+            yield return new WaitForSeconds(0.1f);
+        }
+        yield return new WaitForSeconds(1.5f);
+        uiText.text = "Finished upgrade!";
+        GameWasCompleted();
+    }
+
+    public void OnPickedUpPart()
+    {
+        setText("User interaction required", "", -1);
+    }
+
+    public void StartGame()
+    {
+        uiText.enabled = false;
+        tilemapRenderer.enabled = true;
     }
 
     public void GenerateNewPuzzle()

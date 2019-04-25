@@ -31,6 +31,8 @@ public class ManualStandController : MonoBehaviour
         button.isEnabled = true;
         button.GetComponent<Renderer>().material.color = Color.green;
 
+        netGame.OnPickedUpPart();
+
         uiUpgrade = Instantiate<GameObject>(Resources.Load<GameObject>("UIUpgrade"));
         var uiCanvas = GameObject.FindGameObjectWithTag("MainCanvas");
         uiUpgrade.transform.SetParent(uiCanvas.transform, false);
@@ -66,22 +68,11 @@ public class ManualStandController : MonoBehaviour
     {
         if (createNewGame && button.isActive)
         {
-            if (!isSolved)
-            {
-                netGame.GenerateNewPuzzle();
-                netGame.ResetPuzzle();
-            }
-
             netGame.GameWasCompleted += successaction.success;
             netGame.GameWasCompleted += OnUpgradeFinished;
 
             createNewGame = false;
-            netGamePanel.gameObject.SetActive(true);
-        }
-        else if(!button.isActive)
-        {
-            createNewGame = true;
-            netGamePanel.gameObject.SetActive(false);
+            netGamePanel.netGameBehaviour.StartGame();
         }
     }
 }

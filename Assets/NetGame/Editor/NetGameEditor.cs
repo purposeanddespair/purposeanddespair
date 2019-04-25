@@ -16,5 +16,9 @@ public class ObjectBuilderEditor : Editor
             myScript.GenerateNewPuzzle();
         if (GUILayout.Button("Reset puzzle"))
             myScript.ResetPuzzle();
+        if (GUILayout.Button("Picked up part"))
+            myScript.OnPickedUpPart();
+        if (GUILayout.Button("Start game"))
+            myScript.StartGame();
     }
 }
