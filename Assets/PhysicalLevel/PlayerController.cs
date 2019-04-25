@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     public float speed = 0.1f;
     public float rotationSpeed = 1f;
     public float maxStepHeight = 1.2f;
+    public bool lockMovement = false;
     public PlayerAbilities abilities;
 
     private List<ContactPoint> allContactPoints = new List<ContactPoint>();
@@ -21,6 +22,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (lockMovement)
+            return;
         Move();
 
         //RotateAdjustingToGround();
@@ -33,7 +36,7 @@ public class PlayerController : MonoBehaviour
             MoveUp(stepHeight);
         }
 
-        if (Input.GetKeyDown("e"))
+        if (Input.GetKeyDown("e") || Input.GetKeyDown(KeyCode.Space))
             pickupOrDrop();
 
         allContactPoints.Clear();
