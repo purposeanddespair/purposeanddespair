@@ -47,12 +47,12 @@ public class PlayerController : MonoBehaviour
         Vector3 forward = gameObject.transform.TransformDirection(Vector3.forward);
         Vector3 previousPosition = gameObject.transform.position;
 
-        gameObject.transform.position = previousPosition + forward * speed * Input.GetAxis("Vertical");
-        gameObject.transform.Rotate(new Vector3(0, rotationSpeed * Input.GetAxis("Horizontal"), 0));
+        gameObject.transform.position = previousPosition + forward * speed * Time.deltaTime * Input.GetAxis("Vertical");
+        gameObject.transform.Rotate(new Vector3(0, rotationSpeed * Time.deltaTime * Input.GetAxis("Horizontal"), 0));
 
         if (holdingObject != null)
         {
-            relativeCubeLocation = Quaternion.Euler(0, rotationSpeed * Input.GetAxis("Horizontal"), 0) * relativeCubeLocation;
+            relativeCubeLocation = Quaternion.Euler(0, rotationSpeed * Time.deltaTime * Input.GetAxis("Horizontal"), 0) * relativeCubeLocation;
             holdingObject.transform.position = gameObject.transform.position + relativeCubeLocation;
         }
     }
@@ -60,10 +60,10 @@ public class PlayerController : MonoBehaviour
     private void MoveUp(float height)
     {
         Vector3 forward = gameObject.transform.forward;
-        Vector3 position = gameObject.transform.position + forward * speed * Input.GetAxis("Vertical");
+        Vector3 position = gameObject.transform.position + forward * speed * Time.deltaTime * Input.GetAxis("Vertical");
         position.y += height;
         gameObject.transform.position = position;
-        gameObject.transform.Rotate(new Vector3(0, rotationSpeed * Input.GetAxis("Horizontal"), 0));
+        gameObject.transform.Rotate(new Vector3(0, rotationSpeed * Time.deltaTime * Input.GetAxis("Horizontal"), 0));
 
         AnalyticsEvent.Custom("SteppedUp", new Dictionary<string, object>
         {
