@@ -64,11 +64,6 @@ public class PlayerController : MonoBehaviour
         position.y += height;
         gameObject.transform.position = position;
         gameObject.transform.Rotate(new Vector3(0, rotationSpeed * Time.deltaTime * Input.GetAxis("Horizontal"), 0));
-
-        AnalyticsEvent.Custom("SteppedUp", new Dictionary<string, object>
-        {
-            { "height", height}
-        });
     }
 
     private void RotateAdjustingToGround()
