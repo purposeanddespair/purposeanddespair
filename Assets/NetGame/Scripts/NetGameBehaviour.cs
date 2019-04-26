@@ -126,22 +126,6 @@ public class NetGameBehaviour : MonoBehaviour
         }
     }
 
-    private IEnumerator finishingAnimation()
-    {
-        tilemapRenderer.enabled = false;
-        uiText.enabled = true;
-        setText("Compiling...", "", 0);
-        yield return new WaitForSeconds(0.1f);
-        for (int i = 1; i <= 10; i++)
-        {
-            setText("Compiling...", "", i);
-            yield return new WaitForSeconds(0.1f);
-        }
-        yield return new WaitForSeconds(1.5f);
-        uiText.text = "Finished upgrade!";
-        GameWasCompleted();
-    }
-
     public void OnPickedUpPart()
     {
         setText("User interaction required", "", -1);
@@ -167,17 +151,6 @@ public class NetGameBehaviour : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         uiText.text = "Finished upgrade!";
         GameWasCompleted();
-    }
-
-    public void OnPickedUpPart()
-    {
-        setText("User interaction required", "", -1);
-    }
-
-    public void StartGame()
-    {
-        uiText.enabled = false;
-        tilemapRenderer.enabled = true;
     }
 
     public void GenerateNewPuzzle()
