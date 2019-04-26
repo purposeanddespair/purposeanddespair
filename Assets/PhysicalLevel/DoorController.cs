@@ -9,11 +9,13 @@ public class DoorController : MonoBehaviour
 
     private Vector3 closePosition;
     private Transform door;
+    private bool lastInputActive;
 
     public void Start()
     {
         door = gameObject.transform.GetChild(0);
         closePosition = door.transform.position;
+        lastInputActive = input.isActive;
     }
 
     void Update()
@@ -23,10 +25,14 @@ public class DoorController : MonoBehaviour
         openPosition += door.rotation * doorMovement;
         if (input.isActive)
         {
-            AnalyticsEvent.Custom("DoorOpened", new Dictionary<string, object>
+            if (input.isActive != lastInputActive)
             {
-                { "name", "Door opened"}
-            });
+                lastInputActive = input.isActive;
+                AnalyticsEvent.Custom("DoorOpened", new Dictionary<string, object>
+                {
+                    { "name", "Door opened"}
+                });
+            }
             iTween.MoveTo(door.gameObject, new Hashtable
             {
                 { "position", openPosition },
